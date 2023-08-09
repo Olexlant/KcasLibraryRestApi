@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/allusers.css" type="text/css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Font Awesome CDN link for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
+    <!-- Font Awesome CDN link for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa&family=Exo+2:wght@300&display=swap" rel="stylesheet">
+    <div th:if="${param.category}">
+        <title th:if="${param.category[0] == 'students'}">Студенти</title>
+        <title th:if="${param.category[0] == 'teachers'}">Викладачі</title>
+        <title th:if="${param.category[0] == ''}">Користувачі</title>
+    </div>
+    <div th:unless="${param.category}">
+        <title>Користувачі</title>
+    </div>
+</head>
+<body>
+
+
+
+<div class="pop_up" id="pop_up">
+    <div class="pop_up_container">
+        <div class="pop_up_body" id="pop_up_body">
+            <p>
+                <iconify-icon icon="ep:user-filled" style="color: red;" width="60" height="60"></iconify-icon>
+            </p>
+            <p>Видалити користувача?</p>
+            <form>
+                <div class="btn-yes-no">
+                    <button id="pop_up_submit" type="button" onclick="submitForm()">Так</button>
+                    <button class="no" onclick="closepopupwindow()">Ні</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<nav th:insert="bloks/adminheader :: adminheader"></nav>
+<section class="dashboard">
+    <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+
+        <div class="search-box">
+
+        </div>
+
+        </div>
+
+    <div class="dash-content">
+        <div class="activity">
+            <div class="title">
+                <i><iconify-icon icon="ion:people-sharp"></iconify-icon></i>
+                <div th:if="${param.category}">
+                    <span class="text" th:if="${param.category[0] == 'students'}">Студенти</span>
+                    <span class="text" th:if="${param.category[0] == 'teachers'}">Викладачі</span>
+                    <span class="text" th:if="${param.category[0] == ''}">Користувачі</span>
+                </div>
+                <div th:unless="${param.category}">
+                    <span class="text">Користувачі</span>
+                </div>
+                <form th:action="@{/searchuseradmin}" method="get">
+                    <input type="text" name="keyword" th:value="${keyword}"  placeholder="Пошук" size="50" >
+                    <button type="submit" style="background-color: #25398e; " class="uil-search"></button>
+                </form>
+            </div>
+
+            <div class="table">
+
+                <div class="table_section">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Група</th>
+                            <th>Роль</th>
+                            <th>І'мя</th>
+                            <th>Прізвище</th>
+                            <th>Email</th>
+                            <th>Телефон</th>
+                            <th>Дії</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${Users}">
+                            <div th:if="${user.getGroups()==null}">
+                                <td th:text="${'Без групи'}"></td>
+                            </div>
+                            <div th:if="${user.getGroups()!=null}">
+                                <td th:text="${user.getGroups().getName()}"></td>
+                            </div>
+                            <td th:if="${user.getAppUserRole().toString()=='USER'}">Студент</td>
+                            <td th:if="${user.getAppUserRole().toString()=='ADMIN'}">Адмін</td>
+                            <td th:if="${user.getAppUserRole().toString()=='TEACHER'}">Вчитель</td>
+                            <td th:text="${user.getFirstName()}"></td>
+                            <td th:text="${user.getLastName()}"></td>
+                            <td th:text="${user.getEmail()}"></td>
+                            <td th:text="${user.getPhonenum()}"></td>
+                            <td class="btnactions">
+                                <form th:action="'/admin/allusers/'+ ${user.getId()}+'/edit'" method="get">
+                                    <button style="background-color: #25398e" title="Редагувати користувача" type="submit"><i class="uil uil-pen"></i></button>
+                                </form>
+                                <form th:action="'/admin/usertakenadmin/'+ ${user.getId()}" method="get">
+                                    <button style="background-color: #006B49" title="Книги користувача" type="submit"><i><iconify-icon icon="wpf:books"></iconify-icon></i></button>
+                                </form>
+
+                                <form  th:action="'/admin/allusers/'+ ${user.getId()}+'/remove'" method="post">
+                                    <button style="background-color: #FF3F40"  title="Видалити користувача" type="button" onclick="openpopup(form)"><i class="uil uil-trash-alt"></i></button>
+                                </form>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <ul th:if="${param.success}"  class="notifications"  id="message">
+        <li class="toast success">
+            <div class="column" >
+                <i class="fa-solid fa-circle-check"></i>
+                <span>
+
+                    Користувача успішно видалено</span>
+            </div>
+            <i class="fa-solid fa-xmark"></i>
+        </li>
+    </ul>
+    <ul th:if="${param.changessaved}"  class="notifications"  id="message">
+        <li class="toast success">
+            <div class="column" >
+                <i class="fa-solid fa-circle-check"></i>
+                <span>
+                     Дані користувача оновлено</span>
+            </div>
+            <i class="fa-solid fa-xmark"></i>
+        </li>
+    </ul>
+
+    <ul id="pagination" th:if="${Users.totalPages > 1}">
+        <th:block th:each="pageNumber : ${body}">
+            <li th:if="${pageNumberStat.first}">
+                <a class="" th:href="@{/admin/allusers(size=${Users.size}, page=${pageNumber}, category=${category})}">«</a>
+            </li>
+            <li th:if="${pageNumber} == ${Users.getNumber()+1}">
+                <a  class="active" th:text="${pageNumber}" href="#" ></a>
+            </li>
+            <li  th:if="${pageNumber} == -1"><a href="#">...</a></li>
+            <li th:if="${pageNumber} != -1 and ${pageNumber} != ${Users.getNumber()+1}">
+                <a th:text="${pageNumber}" th:href="@{/admin/allusers(size=${Users.size}, page=${pageNumber}, category=${category})}"></a>
+            </li>
+            <li th:if="${pageNumberStat.last}" >
+                <a th:href="@{/admin/allusers(size=${Users.size}, page=${pageNumber}, category=${category})}">»</a></li>
+        </th:block>
+    </ul>
+</section>
+
+<script src="/js/alert_script.js"></script>
+<script src="/js/popup.js"></script>
+<script src="/js/script.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
+</body>
+</html>

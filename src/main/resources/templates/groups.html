@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!--=== Coding by CodingLab | www.codinglabweb.com === -->
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="/css/allusers.css" type="text/css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Font Awesome CDN link for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
+    <!-- Font Awesome CDN link for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa&family=Exo+2:wght@300&display=swap" rel="stylesheet">
+    <title>Групи</title>
+</head>
+<body>
+
+
+<div class="pop_up" id="pop_up">
+    <div class="pop_up_container">
+        <div class="pop_up_body" id="pop_up_body">
+            <p>
+                <iconify-icon icon="fa6-solid:people-group"style="color: red;" width="60" height="60"></iconify-icon>
+            </p>
+            <p>Видалити групу?</p>
+            <form>
+                <div class="btn-yes-no">
+                    <button id="pop_up_submit" type="button" onclick="submitForm()">Так</button>
+                    <button class="no" onclick="closepopupwindow()">Ні</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="pop_up" id="pop_up1">
+    <div class="pop_up_container">
+        <div class="pop_up_body" id="pop_up_body1">
+            <p>Редагувати групу</p>
+            <form class="edit-name" >
+                <input id="newGroupId" hidden>
+                <input id="newGroupName" type="text" placeholder="Нова назва групи">
+                <div class="btn-yes-no">
+                    <button id="pop_up_submit1" type="button" onclick="submitForm1(form)">Зберегти</button>
+                    <button class="no" onclick="closepopupwindow1()">Назад</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<nav th:insert="bloks/adminheader :: adminheader"></nav>
+
+<section class="dashboard">
+    <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+
+        <div class="search-box">
+
+        </div>
+
+    </div>
+    <div class="dash-content">
+        <div class="activity">
+            <div class="title">
+                <i><iconify-icon icon="fa6-solid:people-group"></iconify-icon></i>
+                <span class="text">Всі Групи</span>
+
+            <form method="post" th:action="@{/admin/groups/save}" th:object="${group}">
+                <div class="user-details">
+                    <div class="input-box">
+                        <input type="text" th:field="*{name}" placeholder="Введіть назву групи" required>
+                    </div>
+                    <div class="button">
+                    <button type="submit">Додати</button>
+                </div>
+                </div>
+            </form>
+            </div>
+            <div class="table">
+
+                <div class="table_section">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Назва</th>
+                            <th>Дії</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="group : ${groups}">
+                            <td th:text="${groups.indexOf(group)+1}"></td>
+                            <td th:text="${group.name}"></td>
+                            <td class="btnactions">
+                                <form th:action="'/admin/usersbygroup/'+ ${group.id}" method="get">
+                                    <button style="background-color: #25398e" title="Користувачі групи" type="submit"><i><iconify-icon icon="ion:people-sharp"></iconify-icon></i></button>
+                                </form>
+                                <form>
+                                    <input name="groupId" th:value="${group.getId()}" hidden>
+                                    <input name="groupName" th:value="${group.getName()}" hidden>
+                                    <button style="background-color: #e9bd0c" title="Редагувати групу" type="button" onclick="openpopup1(form)"><i class="uil uil-pen"></i></button>
+                                </form>
+                                <form th:action="'/admin/booksbygroup/'+ ${group.id}" method="get">
+                                    <button style="background-color: #006B49" type="submit" title="Книги групи"><i><iconify-icon icon="wpf:books"></iconify-icon></i></button>
+                                </form>
+                                <form th:action="'/admin/groups/'+ ${group.id} +'/delete'" method="post">
+                                    <button style="background-color: #FF3F40" title="Видалити групу" type="button" onclick="openpopup(form)"><i class="uil uil-trash-alt"></i></button>
+                                </form>
+
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ul th:if="${param.success}" class="notifications"  id="message">
+        <li class="toast success">
+            <div class="column" >
+                <i class="fa-solid fa-circle-check"></i>
+                <span>
+                     Групу успішно додано</span>
+            </div>
+            <i class="fa-solid fa-xmark"></i>
+        </li>
+    </ul>
+    <ul th:if="${param.saved}" class="notifications"  id="message">
+        <li class="toast success">
+            <div class="column" >
+                <i class="fa-solid fa-circle-check"></i>
+                <span>
+                     Назву успішно оновлено</span>
+            </div>
+            <i class="fa-solid fa-xmark"></i>
+        </li>
+    </ul>
+    <ul th:if="${param.deleted}" class="notifications"  id="message">
+        <li class="toast success">
+            <div class="column" >
+                <i class="fa-solid fa-circle-check"></i>
+                <span>
+                    Групу успішно видалено</span>
+            </div>
+            <i class="fa-solid fa-xmark"></i>
+        </li>
+    </ul>
+</section>
+<script src="/js/alert_script.js"></script>
+<script src="/js/popup.js"></script>
+<script src="/js/script.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!--=== Coding by CodingLab | www.codinglabweb.com === -->
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="/css/adduser.css" type="text/css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Font Awesome CDN link for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
+    <!-- Font Awesome CDN link for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa&family=Exo+2:wght@300&display=swap" rel="stylesheet">
+    <title>Додаваня користувача</title>
+</head>
+<body>
+<nav th:insert="bloks/adminheader :: adminheader"></nav>
+
+<section class="dashboard">
+    <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+
+        <div class="search-box">
+
+        </div>
+
+    </div>
+
+    <div class="dash-content">
+
+        <div class="container">
+            <div class="title"><span>Додавання користувача</span></div>
+            <div class="content">
+                <form method="post" th:action="@{/admin/processuseradd}" th:object="${user}">
+                    <div class="user-details">
+                        <div class="input-box">
+                            <span class="details">Ім'я</span>
+                            <input type="text" th:field="*{firstName}" placeholder="Введіть Ім'я" required>
+                        </div>
+                        <div class="input-box">
+                            <span class="details">Прізвище</span>
+                            <input type="text" th:field="*{lastName}" placeholder="Введіть Прізвище" required>
+                        </div>
+                        <div class="input-box">
+                            <span class="details">E-mail</span>
+                            <input type="email" th:field="*{email}" placeholder="Введіть E-mail" required>
+                        </div>
+                        <div class="input-box">
+                            <span class="details">Пароль</span>
+                            <input type="password" th:field="*{password}" placeholder="Введіть Пароль" required>
+                        </div>
+                        <div class="input-box">
+                            <span class="details">Телефон</span>
+                            <input type="text" th:field="*{phonenum}" placeholder="Введіть Телефон" required>
+                        </div>
+                        <div class="input-box">
+                            <span class="details">Група</span>
+                            <div class="categor">
+                                <select th:name="groupid">
+                                    <option th:value="${''}" th:text="${'Без групи'}"></option>
+                                    <option th:each="group : ${groups}" th:value="${group.getId()}" th:text="${group.getName()}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-box">
+                            <span class="details">Роль</span>
+                            <div class="categor1">
+                                <select  th:name="role">
+                                    <option selected th:value="${'USER'}" th:text="${'Студент'}"></option>
+                                    <option th:value="${'TEACHER'}" th:text="${'Вчитель'}"></option>
+                                    <option th:value="${'ADMIN'}" th:text="${'Адмін'}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button">
+                        <button type="submit">Додати</button>
+                    </div>
+                </form> </div>
+
+        </div>
+    </div>
+
+    </div>
+    <ul  th:if="${param.emailpresent}"  class="notifications"  id="message">
+        <li class="toast error">
+            <div class="column" >
+                <i class="fa-solid fa-circle-xmark"></i>
+                <span>
+                      Користувач з таким email вже існує</span>
+            </div>
+            <i class="fa-solid fa-xmark"></i>
+        </li>
+    </ul>
+
+    <ul th:if="${param.useradded}" class="notifications"  id="message">
+        <li class="toast success">
+            <div class="column" >
+                <i class="fa-solid fa-circle-check"></i>
+                <span>
+                     Нового корисувача успішно додано</span>
+            </div>
+            <i class="fa-solid fa-xmark"></i>
+        </li>
+    </ul>
+
+
+</section>
+
+<script src="/js/alert_script.js"></script>
+<script src="/js/popup.js"></script>
+<script src="/js/script.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.3/iconify-icon.min.js"></script>
+</body>
+</html>

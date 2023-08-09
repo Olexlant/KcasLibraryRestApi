@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title th:text="#{allbook.title}"></title>
+	<link href="/css/allbook.css" type="text/css" rel="stylesheet" th:href="@{/css/allbook.css}">
+	<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+	<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Comfortaa&family=Exo+2:wght@300&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<header class="site-header sticky-top py-1" th:insert="bloks/header :: header"></header>
+<body>
+<div class="container">
+	<div class="title-services"><span th:text="#{allbook.title}"></span></div>
+	<form th:action="@{/searchbook}" method="get">
+		<input type="text" name="keyword" th:value="${keyword}"  th:placeholder="#{search.placeholder}" size="25" >
+		<button type="submit" style="background-color: #25398e; " class="uil-search"></button>
+	</form>
+	<div class="categor">
+		<select id="bookcategories" name="bookcategories" onchange="window.location.href=this.value;">
+		  <option th:value="@{/allbooks(size=${books.size}, page=${pageNumber})}" th:text="#{allbook.title}"></option>
+		  <option th:each="category : ${bookcategories}" th:selected="${category.name==currentcategory}" th:value="@{/allbooks(size=${books.size}, page=${pageNumber},category=${category.name})}" th:text="${category.name}"></option>
+		</select>
+	  </div>
+	<div class="box-container" >
+		<div class="box" th:each="book, iStat : ${books}">
+			<div class="image">
+				<img  class="rounded-5 mb-5 mt-5" style="width: 100%" th:src="@{'/book/image/' + ${book.getId()}}" />
+			</div>
+			<div class="content">
+				<h3 th:text="${book.title}"></h3>
+				<p th:text="#{allbook.topic1}+${book.author}"></p>
+				<div class="button">
+					<a th:href="'/allbooks/'+ ${book.id}" class="btn" th:text="#{allbook.button1}"></a>
+					<div>
+						<div th:if="${likedbooks.contains(book)}">
+							<form th:action="'/likingbook/'+ ${book.id} + '/deletebyuser'" method="post">
+								<button class="btn3 icon-trash" type="submit" th:title="#{allbook.button2}">
+									<iconify-icon icon="majesticons:book-minus-line" style="font-size: 26px"></iconify-icon>
+								</button>
+							</form>
+						</div>
+						<div th:if="${!likedbooks.contains(book)}">
+							<form th:action="'/likingbook/'+ ${book.id}" method="post">
+								<button class="btn3" type="submit" th:title="#{allbook.button3}">
+									<iconify-icon icon="mdi:book-heart-outline" style="font-size: 26px"></iconify-icon>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="icons">
+					<span > <i class="fas fa-calendar"></i><a th:text="${' '+book.year}"></a></span>
+					<span > <i class="fas fa-user"></i><a th:text="${' '+book.author}"></a></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<ul id="pagination"  th:if="${books.totalPages > 1 && status!='search'}">
+		<th:block th:each="pageNumber : ${body}">
+		<li th:if="${pageNumberStat.first}">
+			<a class="" th:href="@{/allbooks(size=${books.size}, page=${pageNumber},category=${currentcategory})}">«</a>
+		</li>
+		<li th:if="${pageNumber} == ${books.getNumber()+1}">
+			<a  class="active" th:text="${pageNumber}" href="#" ></a>
+		</li>
+		<li  th:if="${pageNumber} == -1"><a href="#">...</a></li>
+		<li th:if="${pageNumber} != -1 and ${pageNumber} != ${books.getNumber()+1}">
+			<a th:text="${pageNumber}" th:href="@{/allbooks(size=${books.size}, page=${pageNumber},category=${currentcategory})}"></a>
+		</li>
+		<li th:if="${pageNumberStat.last}" >
+			<a th:href="@{/allbooks(size=${books.size}, page=${pageNumber},category=${currentcategory})}">»</a></li>
+			</th:block>
+	</ul>
+	<ul id="pagination"  th:if="${books.totalPages > 1 && status=='search'}">
+		<th:block th:each="pageNumber : ${body}">
+			<li th:if="${pageNumberStat.first}">
+				<a class="" th:href="@{/searchbook(size=${books.size}, page=${pageNumber},keyword=${keyword})}">«</a>
+			</li>
+			<li th:if="${pageNumber} == ${books.getNumber()+1}">
+				<a  class="active" th:text="${pageNumber}" href="#" ></a>
+			</li>
+			<li  th:if="${pageNumber} == -1"><a href="#">...</a></li>
+			<li th:if="${pageNumber} != -1 and ${pageNumber} != ${books.getNumber()+1}">
+				<a th:text="${pageNumber}" th:href="@{/searchbook(size=${books.size}, page=${pageNumber},keyword=${keyword})}"></a>
+			</li>
+			<li th:if="${pageNumberStat.last}" >
+				<a th:href="@{/searchbook(size=${books.size}, page=${pageNumber},keyword=${keyword})}">»</a></li>
+		</th:block>
+	</ul>
+	</div>
+	<a href="https://app.service.utog.org/"><span class="btnServiceUTOG"></span></a>
+<script src="/js/select.js"></script>
+</body>
+</html>
