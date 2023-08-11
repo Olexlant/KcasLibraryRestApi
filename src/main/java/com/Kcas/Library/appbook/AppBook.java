@@ -40,6 +40,7 @@ public class AppBook {
     @Basic(fetch=FetchType.LAZY)
     private byte[] bookimg;
 
+    @JsonIgnore
     @Basic(fetch=FetchType.LAZY)
     private byte[] qrimg;
 
