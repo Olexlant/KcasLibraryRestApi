@@ -1,12 +1,12 @@
 package com.Kcas.Library.email;
 
-import com.Kcas.Library.appbook.AppBook;
-import com.Kcas.Library.appuser.AppUser;
-import com.Kcas.Library.appuser.TakenBooks;
+import com.Kcas.Library.entities.Book;
+import com.Kcas.Library.entities.User;
+import com.Kcas.Library.entities.TakenBooks;
 
 public interface EmailSender {
-    void sendregistrationmail(AppUser user, String link);
-    void sendchangepasswordmail(AppUser user, String link);
-    void sendNotificationMessage(AppUser user, AppBook book, TakenBooks takenBooks);
+    void sendregistrationmail(User user, String link);
+    void sendchangepasswordmail(User user, String link);
+    void sendNotificationMessage(User user, Book book, TakenBooks takenBooks);
 
 }

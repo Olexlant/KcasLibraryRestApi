@@ -1,7 +1,7 @@
 package com.Kcas.Library.email;
 
-import com.Kcas.Library.appuser.TakenBooks;
-import com.Kcas.Library.appuser.TakenBooksRepository;
+import com.Kcas.Library.entities.TakenBooks;
+import com.Kcas.Library.repositories.TakenBooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;

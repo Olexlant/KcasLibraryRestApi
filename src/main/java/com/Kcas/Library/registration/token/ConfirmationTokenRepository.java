@@ -1,6 +1,6 @@
 package com.Kcas.Library.registration.token;
 
-import com.Kcas.Library.appuser.AppUser;
+import com.Kcas.Library.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +16,7 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
 
     ConfirmationToken findByToken(String token);
 
-    Optional<ConfirmationToken> findByAppUser(AppUser appUser);
+    Optional<ConfirmationToken> findByUser(User user);
 
     @Transactional
     @Modifying
@@ -24,5 +24,5 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
     int updateConfirmedAt(String token, LocalDateTime confirmedAt);
 
     @Transactional
-    void deleteByAppUser(AppUser appUser);
+    void deleteByUser(User user);
 }

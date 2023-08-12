@@ -1,6 +1,6 @@
 package com.Kcas.Library.registration.token;
 
-import com.Kcas.Library.appuser.AppUserRepository;
+import com.Kcas.Library.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class ConfirmationTokenService {
 
     private final ConfirmationTokenRepository confirmationTokenRepository;
-    private final AppUserRepository appUserRepository;
+    private final UserRepository userRepository;
 
     public void saveConfirmationToken(ConfirmationToken token) {
         confirmationTokenRepository.save(token);
