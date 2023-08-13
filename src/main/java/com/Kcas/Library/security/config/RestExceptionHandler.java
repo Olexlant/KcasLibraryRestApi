@@ -1,5 +1,6 @@
 package com.Kcas.Library.security.config;
 
+import com.Kcas.Library.dtos.ErrorDto;
 import com.Kcas.Library.exceptions.AppException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -7,7 +7,6 @@ import com.Kcas.Library.entities.User;
 import com.Kcas.Library.exceptions.AppException;
 import com.Kcas.Library.mappers.UserMapper;
 import com.Kcas.Library.repositories.UserRepository;
-import com.Kcas.Library.security.PasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

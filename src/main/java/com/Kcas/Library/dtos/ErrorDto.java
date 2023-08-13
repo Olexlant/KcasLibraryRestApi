@@ -1,4 +1,4 @@
-package com.Kcas.Library.security.config;
+package com.Kcas.Library.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
