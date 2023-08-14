@@ -13,20 +13,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
 public class UserAuthProvider {
 
+    public List<String> JWTtokenBlackList;
     private final UserService userService;
 
     @Value("${security.jwt.token.secret-key:secret-key}")
     private String secretKey;
     @PostConstruct
     protected void init(){
+        this.JWTtokenBlackList = new ArrayList<>();
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
@@ -48,9 +48,15 @@ public class UserAuthProvider {
                 .build();
 
         DecodedJWT decoded = verifier.verify(token);
-
+        if (JWTtokenBlackList.contains(token)){
+            return UsernamePasswordAuthenticationToken.unauthenticated(null,null);
+        }
         UserDto user = userService.findByLogin(decoded.getIssuer());
-
+        user.setToken(token);
         return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+    }
+
+    public void addTokenToBlackList(String token){
+        JWTtokenBlackList.add(token);
     }
 }

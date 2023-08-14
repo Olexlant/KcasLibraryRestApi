@@ -7,19 +7,24 @@ import com.Kcas.Library.security.config.UserAuthProvider;
 import com.Kcas.Library.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api/auth")
 public class AuthController {
-
     private final UserService userService;
     private final UserAuthProvider userAuthProvider;
+
+    @GetMapping("/")
+    public String home(){
+        return "ok";
+    }
 
     @PostMapping("/login")
     public ResponseEntity<UserDto> login(@RequestBody @Valid CredentialsDto credentialsDto){
@@ -34,6 +39,13 @@ public class AuthController {
         createdUser.setToken(userAuthProvider.createToken(createdUser.getEmail()));
         return ResponseEntity.created(URI.create("/api/users/"+createdUser.getId()))
                 .body(createdUser);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@AuthenticationPrincipal UserDto userDto){
+        userAuthProvider.addTokenToBlackList(userDto.getToken());
+        return new ResponseEntity<>("Logged out",
+                HttpStatus.OK);
     }
 
 }
