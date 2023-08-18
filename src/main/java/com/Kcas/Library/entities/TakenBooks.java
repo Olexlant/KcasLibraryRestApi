@@ -1,11 +1,9 @@
 package com.Kcas.Library.entities;
 
-import com.Kcas.Library.entities.Book;
-import com.Kcas.Library.entities.User;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Getter
